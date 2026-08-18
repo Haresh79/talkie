@@ -90,7 +90,7 @@ fun LoginScreen(current: Context, navController: NavHostController) {
                     Text(text = "Login", color = Color.Black, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                 }
             }else{
-                CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+                CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally), color = Yellow65)
             }
         }
     }

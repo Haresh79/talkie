@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.example.talkie"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -41,7 +41,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -51,6 +51,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -81,10 +82,9 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:2.4.0")
 
+    implementation("com.cloudinary:cloudinary-android:3.1.2")
+
    // implementation ("com.google.android.play:integrity:1.4.0")
 
     implementation("com.google.android.material:material:1.12.0")
-    implementation ("androidx.compose.material:material:1.5.2")
-    implementation ("androidx.compose.ui:ui:1.5.2")
-    implementation ("androidx.compose.ui:ui-tooling-preview")
 }

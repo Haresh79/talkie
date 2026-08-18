@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,6 +36,9 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 
+import androidx.compose.foundation.isSystemInDarkTheme
+
+
 @Composable
 fun NewChat(navController: NavHostController, current: Context) {
     var Receiver by remember {
@@ -48,19 +52,55 @@ fun NewChat(navController: NavHostController, current: Context) {
     }
     val db=FirebaseFirestore.getInstance()
 
-    Row(
+    val isDark = isSystemInDarkTheme()
+    val bgColor = if (isDark) Color.Black else Color.White
+    val textColor = if (isDark) Color.White else Color.Black
+    val mainTextColor = if (isDark) Color.White else Color.Black
+
+    Column(
         Modifier
             .fillMaxSize()
-            .padding(10.dp)) {
+            .padding(20.dp)) {
+        Text(
+            text = "New Chat",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            color = mainTextColor
+        )
+        Text(
+            text = "Chat with new users search by contact number",
+            fontSize = 12.sp,
+            color = Color.Gray
+        )
+        
+        Spacer(modifier = Modifier.height(30.dp))
+
         Column(
             Modifier
                 .fillMaxWidth()
+                .padding(top = 100.dp)
+                .background(color = bgColor, RoundedCornerShape(10.dp))
                 .padding(10.dp)
-                .align(Alignment.CenterVertically)
-                .background(color = Color.LightGray, RoundedCornerShape(10.dp))) {
+        ) {
             Spacer(modifier = Modifier.height(40.dp))
             if (loading==false){
-                OutlinedTextField(value = Receiver, onValueChange ={ Receiver=it }, Modifier.align(Alignment.CenterHorizontally))
+                OutlinedTextField(
+                    value = Receiver, 
+                    onValueChange ={ Receiver=it }, 
+                    Modifier.align(Alignment.CenterHorizontally),
+                    colors = TextFieldDefaults.colors(
+                        focusedTextColor = textColor,
+                        unfocusedTextColor = textColor,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        cursorColor = textColor,
+                        focusedLabelColor = textColor,
+                        unfocusedLabelColor = textColor,
+                        focusedIndicatorColor = Yellow65,
+                        unfocusedIndicatorColor = Yellow65
+                    ),
+                    label = { Text("Phone Number", color = textColor) }
+                )
                 Row (
                     Modifier
                         .align(Alignment.End)
@@ -103,7 +143,7 @@ fun NewChat(navController: NavHostController, current: Context) {
                     }
                 }
             }else{
-                CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+                CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally), color = Yellow65)
             }
             Spacer(modifier = Modifier.height(20.dp))
         }

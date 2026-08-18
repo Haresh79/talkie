@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import androidx.compose.material3.Surface
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -60,29 +59,29 @@ class MainActivity : ComponentActivity() {
                         composable("/") {
                             Flash(LocalContext.current, navController)
                         }
-                        composable("/login"){
+                        composable("/login") {
                             LoginScreen(LocalContext.current, navController)
                         }
-                        composable("/home"){
+                        composable("/home") {
                             Home(navController, LocalContext.current)
                         }
-                        composable("/new"){
+                        composable("/new") {
                             NewChat(navController, LocalContext.current)
                         }
-                        composable("/profile"){
+                        composable("/profile") {
                             Profile(navController)
                         }
                         composable("/nav") {
                             navBar(navController)
                         }
                         composable("/chatting/{number}") {
-                            val receiver=it.arguments?.getString("number")?:""
+                            val receiver = it.arguments?.getString("number") ?: ""
                             Chatting(navController, LocalContext.current, receiver)
                         }
                     }
 
 
-                        //OTPVerification(LocalContext.current)
+                    //OTPVerification(LocalContext.current)
 //                    val currentUser = auth.currentUser
 //                    if (currentUser != null) {
 //                        LoginScreen(LocalContext.current)

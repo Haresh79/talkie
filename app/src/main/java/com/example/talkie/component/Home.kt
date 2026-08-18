@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,7 +29,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -64,18 +68,26 @@ fun Home(navController: NavHostController, current: Context) {
         }
     }
 
+    val isDark = isSystemInDarkTheme()
+    val headerColor = if (isDark) Color.White else Color.Black
+
     Column(Modifier.fillMaxSize()) {
         Row (
             Modifier
                 .fillMaxWidth()
                 .padding(15.dp)){
-            Text(text = "Talkie", fontWeight = FontWeight.Bold, fontSize = 30.sp, fontFamily = FontFamily.Monospace)
+            Text(
+                text = "Messages", 
+                fontWeight = FontWeight.Bold, 
+                fontSize = 30.sp, 
+                color = headerColor
+            )
         }
         LazyColumn (Modifier.fillMaxWidth()){
             if (loading){
                 item {
                     Column (Modifier.fillMaxWidth()){
-                        CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+                        CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally), color = Yellow65)
                     }
                 }
             }else{
@@ -124,12 +136,18 @@ fun AccBox(C: Contact, navController: NavHostController) {
                 Image(painter = painterResource(id = R.drawable.user), contentDescription ="",
                     Modifier
                         .width(45.dp)
-                        .align(Alignment.CenterHorizontally))
+                        .height(45.dp)
+                        .clip(CircleShape)
+                        .align(Alignment.CenterHorizontally),
+                    contentScale = ContentScale.Crop)
             }else{
                 AsyncImage(model = dp, contentDescription = "",
                     Modifier
                         .width(45.dp)
-                        .align(Alignment.CenterHorizontally))
+                        .height(45.dp)
+                        .clip(CircleShape)
+                        .align(Alignment.CenterHorizontally),
+                    contentScale = ContentScale.Crop)
             }
         }
         Spacer(modifier = Modifier.width(15.dp))

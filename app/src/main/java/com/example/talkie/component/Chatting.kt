@@ -4,6 +4,8 @@ package com.example.talkie.component
 import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.text.format.DateUtils
 import android.util.Log
@@ -23,6 +25,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -51,7 +54,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -59,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.talkie.R
 import com.example.talkie.datamodels.Chat
 import com.example.talkie.ui.theme.Yellow65
@@ -115,6 +121,9 @@ fun Chatting(navController: NavHostController, current: Context, receiver: Strin
     var timePicker by remember {
         mutableStateOf(false)
     }
+    var dp by remember {
+        mutableStateOf("default")
+    }
 
 
     val db=FirebaseFirestore.getInstance()
@@ -160,6 +169,7 @@ fun Chatting(navController: NavHostController, current: Context, receiver: Strin
         Receiver=receiver
         db.collection("users").whereEqualTo("number", receiver).get().addOnSuccessListener {
             Name= it.documents[0].get("name").toString()
+            dp= it.documents[0].get("dp").toString()
         }
         db.collection("users").document(uId).get().addOnSuccessListener {
             Sender=it.get("number").toString()
@@ -218,11 +228,21 @@ fun Chatting(navController: NavHostController, current: Context, receiver: Strin
                             .clickable {
                                 navController.popBackStack()
                             })
-                    Image(
-                        painter = painterResource(id = R.drawable.user),
-                        contentDescription = "",
-                        Modifier.width(50.dp)
-                    )
+                    if (dp=="default"){
+                        Image(painter = painterResource(id = R.drawable.user), contentDescription ="",
+                            Modifier
+                                .width(50.dp)
+                                .height(50.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop)
+                    }else{
+                        AsyncImage(model = dp, contentDescription = "",
+                            Modifier
+                                .width(50.dp)
+                                .height(50.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop)
+                    }
                     Spacer(modifier = Modifier.width(15.dp))
                     Column(Modifier.align(Alignment.CenterVertically)) {
                         Text(text = "$Name", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
@@ -244,6 +264,12 @@ fun Chatting(navController: NavHostController, current: Context, receiver: Strin
                             Modifier
                                 .align(Alignment.End)
                                 .padding(horizontal = 10.dp)
+                                .clickable {
+                                    val intent = Intent(Intent.ACTION_DIAL).apply {
+                                        data = Uri.parse("tel:+91$Receiver")
+                                    }
+                                    current.startActivity(intent)
+                                }
                         )
                     }
                 }
@@ -268,7 +294,7 @@ fun Chatting(navController: NavHostController, current: Context, receiver: Strin
                         }
                     } else {
                         item {
-                            CircularProgressIndicator()
+                            CircularProgressIndicator(color = Yellow65)
                         }
                     }
                 }

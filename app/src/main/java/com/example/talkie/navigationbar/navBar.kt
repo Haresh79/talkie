@@ -17,8 +17,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
@@ -27,6 +26,14 @@ import com.example.talkie.component.Home
 import com.example.talkie.component.NewChat
 import com.example.talkie.component.Profile
 import com.example.talkie.datamodels.NavItem
+
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.NavigationBarItemDefaults
+import com.example.talkie.ui.theme.Yellow65
+
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun navBar(navController: NavHostController) {
@@ -38,19 +45,33 @@ fun navBar(navController: NavHostController) {
     var selectedIndex by remember {
         mutableIntStateOf(0)
     }
+    
+    val isDark = isSystemInDarkTheme()
+    val containerColor = if (isDark) Color.Black else Color.White
+    val inactiveColor = if (isDark) Color.White else Color.Black
+
     Scaffold(modifier=Modifier.fillMaxSize(),
              bottomBar = {
-                 NavigationBar(modifier=Modifier.drawWithContent { drawContent()
-                 drawLine(color = Color.Gray, start = Offset(0f, 0f), end = Offset(size.width, 0f), strokeWidth = 2f)},
-                     containerColor = Color.White,
-                     contentColor = Color.LightGray
+                 NavigationBar(modifier=Modifier
+                     .padding(start = 16.dp, end = 16.dp, bottom = 10.dp)
+                     .clip(RoundedCornerShape(30.dp)),
+                     containerColor = containerColor,
                  ){
                     navItemList.forEachIndexed { index, navItem ->
-                        NavigationBarItem(selected = selectedIndex==index,
+                        NavigationBarItem(
+                            selected = selectedIndex==index,
                             onClick = { selectedIndex=index },
                             icon = { Icon(imageVector = navItem.icon, contentDescription = navItem.lable) },
                             label = {if (navItem.lable=="New Chat"){
-                                Text(text = navItem.lable, fontSize = 14.sp)} })
+                                Text(text = navItem.lable, fontSize = 12.sp)} },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = inactiveColor,
+                                unselectedIconColor = inactiveColor,
+                                selectedTextColor = inactiveColor,
+                                unselectedTextColor = inactiveColor,
+                                indicatorColor = Yellow65 // Active background color
+                            )
+                        )
                     }
                  }
 
